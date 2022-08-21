@@ -13,7 +13,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
-private const val DATABASE_NAME = "FavoritesCurrencies"
+private const val DATABASE_NAME = "Currencies"
 
 @Module
 @InstallIn(SingletonComponent::class)

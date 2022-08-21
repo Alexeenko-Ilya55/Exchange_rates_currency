@@ -4,7 +4,6 @@ import com.alexeenko_ilya.domain.models.Currency
 
 data class CurrencyDTO(
     val code: String,
-    var isFavorite: Boolean
 ) {
-    fun toCurrency() = Currency(code, isFavorite)
+    fun toCurrency(isFavorite: Boolean) = Currency(code, isFavorite)
 }

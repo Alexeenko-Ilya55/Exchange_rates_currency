@@ -11,5 +11,5 @@ data class CurrencyEntity(
     @PrimaryKey
     val code: String
 ) {
-    fun toCurrencyDTO() = CurrencyDTO(code,true)
+    fun toCurrencyDTO() = CurrencyDTO(code)
 }

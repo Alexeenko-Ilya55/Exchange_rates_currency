@@ -11,24 +11,21 @@ import javax.inject.Inject
 class RepositoryImpl @Inject constructor(
     private val apiRepository: ApiRepository,
     private val database: Database
-) :
-    Repository {
+) : Repository {
 
     override suspend fun getAllCurrencies(): Flow<List<Currency>> =
         apiRepository.getCurrencies().map {
-            it.map { currencyDTO -> currencyDTO.toCurrency() }
+            it.map { currencyDTO -> currencyDTO.toCurrency(false) }
         }
 
     override suspend fun getAllExchangeRates(baseCurrency: String): Flow<ExchangeRates> {
-        val favoritesCurrency = database.getFavoritesCurrencies().map { it.code }
-        val exchangeRates = apiRepository.getExchangeRates(baseCurrency).map {
-            it.currenciesDTO.forEach { currencyDTO ->
-                if (favoritesCurrency.contains(currencyDTO.code))
-                    currencyDTO.isFavorite = true
+        val favoritesCurrencies = database.getFavoritesCurrencies().map { it.code }
+        return apiRepository.getExchangeRates(baseCurrency).map {
+            val currencies = it.currenciesDTO.map { currencyDTO ->
+                currencyDTO.toCurrency(favoritesCurrencies.contains(currencyDTO.code))
             }
-            it.toExchangeRates()
+            it.toExchangeRates(currencies)
         }
-        return exchangeRates
     }
 
     override suspend fun getFavoritesExchangeRates(baseCurrency: String): Flow<ExchangeRates> {
@@ -37,14 +34,14 @@ class RepositoryImpl @Inject constructor(
             favoritesCurrencies += "${currency.code},"
         }
         return apiRepository.getExchangeRates(baseCurrency, favoritesCurrencies).map {
-            it.currenciesDTO.forEach { currencyDTO -> currencyDTO.isFavorite = true }
-            it.toExchangeRates()
+            val currencies = it.currenciesDTO.map { currencyDTO -> currencyDTO.toCurrency(true) }
+            it.toExchangeRates(currencies)
         }
     }
 
     override suspend fun addCurrencyToFavorites(currency: Currency) =
-        database.addCurrencyToFavorites(CurrencyDTO(currency.code, currency.isFavorite))
+        database.addCurrencyToFavorites(CurrencyDTO(currency.code))
 
     override suspend fun deleteCurrencyFromFavorites(currency: Currency) =
-        database.deleteCurrencyFromFavorites(CurrencyDTO(currency.code, currency.isFavorite))
+        database.deleteCurrencyFromFavorites(CurrencyDTO(currency.code))
 }

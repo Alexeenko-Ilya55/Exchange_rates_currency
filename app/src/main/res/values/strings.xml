@@ -10,5 +10,7 @@
     <string name="valueAscending">Значение по возрастанию</string>
     <string name="valueDescending">Значение по убыванию</string>
 
+    <string name="internetException">Нет подключения к интернету. Проверьте подключение и попробуйте ещё раз</string>
+    <string name="databaseException">Возникла системная ошибка</string>
 
 </resources>

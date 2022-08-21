@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.PopupMenu
+import android.widget.Toast
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
@@ -18,6 +19,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alexeenko_ilya.domain.models.Currency
 import com.alexeenko_ilya.exchangeratescurrency.R
+import com.alexeenko_ilya.exchangeratescurrency.adapters.CurrenciesRecyclerViewClickListener
 import com.alexeenko_ilya.exchangeratescurrency.adapters.CurrencyListAdapter
 import com.alexeenko_ilya.exchangeratescurrency.databinding.CurrencyFragmentBinding
 import com.alexeenko_ilya.exchangeratescurrency.viewModels.FragmentViewModel
@@ -31,18 +33,18 @@ import kotlin.collections.set
 const val BASE_CURRENCY = "USD"
 const val ARG_KEY = "typeFragment"
 const val FRAGMENT_FAVORITES = "favorites"
-const val DATA_STORE_NAME = "Settings"
-const val LAST_VIEWED_CURRENCY = "Last viewed currency"
-
+const val LAST_VIEWED_CURRENCY_KEY = "Last viewed currency"
 
 @AndroidEntryPoint
 class AllCurrencyFragment : Fragment(), CurrenciesRecyclerViewClickListener {
 
     private val viewModel: FragmentViewModel by viewModels()
-    @Inject lateinit var dataStore: DataStore<Preferences>
+
+    @Inject
+    lateinit var dataStore: DataStore<Preferences>
     private var exchangeRatesMap: MutableMap<Currency, Double> = mutableMapOf()
     private lateinit var binding: CurrencyFragmentBinding
-    private val lastViewedCurrency = stringPreferencesKey(LAST_VIEWED_CURRENCY)
+    private val lastViewedCurrencyKey = stringPreferencesKey(LAST_VIEWED_CURRENCY_KEY)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -75,6 +77,11 @@ class AllCurrencyFragment : Fragment(), CurrenciesRecyclerViewClickListener {
                 it.currencies.forEachIndexed { index, currency ->
                     exchangeRatesMap[currency] = it.values[index]
                 }
+            }
+        }
+        lifecycleScope.launchWhenStarted {
+            viewModel.exceptionHandler.collectLatest {
+                Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
             }
         }
         return binding.root
@@ -115,7 +122,6 @@ class AllCurrencyFragment : Fragment(), CurrenciesRecyclerViewClickListener {
                     viewModel.getAllExchangeRates(currencies[position])
                 lifecycleScope.launch { saveToDataStore(currencies[position]) }
             }
-
             override fun onNothingSelected(p0: AdapterView<*>?) {}
         }
     }
@@ -128,15 +134,10 @@ class AllCurrencyFragment : Fragment(), CurrenciesRecyclerViewClickListener {
         }
     }
 
-    private suspend fun saveToDataStore(currencyCode: String) =
-        dataStore.edit { preferences ->
-            preferences[lastViewedCurrency] = currencyCode
-        }
+    private suspend fun saveToDataStore(currencyCode: String) = dataStore.edit { preferences ->
+        preferences[lastViewedCurrencyKey] = currencyCode
+    }
 
     private suspend fun readFromDataStore(): String =
-        dataStore.data.first()[lastViewedCurrency] ?: BASE_CURRENCY
-}
-
-interface CurrenciesRecyclerViewClickListener {
-    fun buttonFavoriteClicked(currencyCode: String, isFavorite: Boolean)
+        dataStore.data.first()[lastViewedCurrencyKey] ?: BASE_CURRENCY
 }

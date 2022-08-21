@@ -1,5 +1,6 @@
 package com.alexeenko_ilya.data.models
 
+import com.alexeenko_ilya.domain.models.Currency
 import com.alexeenko_ilya.domain.models.ExchangeRates
 
 data class ExchangeRatesDTO(
@@ -7,5 +8,5 @@ data class ExchangeRatesDTO(
     val currenciesDTO: List<CurrencyDTO>,
     var values: List<Double>
 ) {
-    fun toExchangeRates() = ExchangeRates(base, currenciesDTO.map { it.toCurrency() }, values)
+    fun toExchangeRates(currencies: List<Currency>) = ExchangeRates(base, currencies, values)
 }

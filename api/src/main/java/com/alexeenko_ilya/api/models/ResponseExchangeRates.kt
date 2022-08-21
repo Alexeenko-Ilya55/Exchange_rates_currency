@@ -11,7 +11,7 @@ data class ResponseExchangeRates(
 ) {
     fun toExchangeRatesDTO(): ExchangeRatesDTO {
         val listCurrencyDTO = mutableListOf<CurrencyDTO>()
-        results.keys.forEach { listCurrencyDTO.add(CurrencyDTO(it, false)) }
+        results.keys.forEach { listCurrencyDTO.add(CurrencyDTO(it)) }
         return ExchangeRatesDTO(base, listCurrencyDTO, results.values.toList())
     }
 }

@@ -8,7 +8,6 @@ import com.alexeenko_ilya.domain.models.ExchangeRates
 import com.alexeenko_ilya.exchangeratescurrency.R
 import com.alexeenko_ilya.exchangeratescurrency.databinding.CurrencyItemLayoutBinding
 import com.alexeenko_ilya.exchangeratescurrency.fragments.BASE_CURRENCY
-import com.alexeenko_ilya.exchangeratescurrency.fragments.CurrenciesRecyclerViewClickListener
 
 class CurrencyListAdapter(private val clickListener: CurrenciesRecyclerViewClickListener) :
     RecyclerView.Adapter<CurrencyListAdapter.CurrencyListHolder>() {
@@ -17,6 +16,11 @@ class CurrencyListAdapter(private val clickListener: CurrenciesRecyclerViewClick
 
     fun setData(exchangeRates: ExchangeRates) {
         this.exchangeRates = exchangeRates
+        notifyDataSetChanged()
+    }
+
+    fun setData(map: Map<Currency, Double>) {
+        exchangeRates = ExchangeRates(BASE_CURRENCY, map.keys.toList(), map.values.toList())
         notifyDataSetChanged()
     }
 
@@ -62,9 +66,8 @@ class CurrencyListAdapter(private val clickListener: CurrenciesRecyclerViewClick
     }
 
     override fun getItemCount() = exchangeRates.values.size
+}
 
-    fun setData(map: Map<Currency, Double>) {
-        exchangeRates = ExchangeRates(BASE_CURRENCY, map.keys.toList(), map.values.toList())
-        notifyDataSetChanged()
-    }
+interface CurrenciesRecyclerViewClickListener {
+    fun buttonFavoriteClicked(currencyCode: String, isFavorite: Boolean)
 }
