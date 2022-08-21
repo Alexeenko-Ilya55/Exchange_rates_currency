@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_graph"
+    app:startDestination="@id/allCurrencyFragment">
+
+    <fragment
+        android:id="@+id/allCurrencyFragment"
+        android:name="com.alexeenko_ilya.exchangeratescurrency.fragments.AllCurrencyFragment"
+        android:label="all_currency_fragment"
+        tools:layout="@layout/currency_fragment" >
+        <argument
+            android:name="typeFragment"
+            app:argType="string"
+            android:defaultValue="Popular" />
+    </fragment>
+    <fragment
+        android:id="@+id/favoritesFragment"
+        android:name="com.alexeenko_ilya.exchangeratescurrency.fragments.AllCurrencyFragment"
+        android:label="favoritesFragment"
+        tools:layout="@layout/currency_fragment" >
+        <argument
+            android:name="typeFragment"
+            app:argType="string"
+            android:defaultValue="favorites" />
+    </fragment>
+</navigation>

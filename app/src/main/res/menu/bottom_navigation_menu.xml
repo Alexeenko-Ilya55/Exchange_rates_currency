@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/allCurrencyFragment"
+        android:icon="@drawable/all_currency_menu"
+        android:title="@string/all_currency"/>
+
+    <item
+        android:id="@+id/favoritesFragment"
+        android:icon="@drawable/favorites_menu"
+        android:title="@string/favorites"/>
+</menu>

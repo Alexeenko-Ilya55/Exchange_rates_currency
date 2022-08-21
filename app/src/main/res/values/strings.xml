@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Курсы валют</string>
+
+    <string name="favorites">Избранное</string>
+    <string name="all_currency">Все валюты</string>
+
+    <string name="exchange_rates_to">Курсы валют к </string>
+    <string name="alphabetAscending">По алфавиту (A-Z)</string>
+    <string name="alphabetDescending">По алфавиту (Z-A)</string>
+    <string name="valueAscending">Значение по возрастанию</string>
+    <string name="valueDescending">Значение по убыванию</string>
+
+
+</resources>
